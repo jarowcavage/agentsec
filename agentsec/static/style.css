@@ -33,7 +33,7 @@ h2 { font-size: 1.22rem; letter-spacing: -.022em; }
 h3 { font-size: 1rem; }
 .intro p { margin-top: 10px; max-width: 65ch; color: var(--muted); }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
-.upload { border-top: 4px solid var(--accent); display: grid; gap: 16px; }
+.upload { grid-template-columns: minmax(0, 1fr); border-top: 4px solid var(--accent); display: grid; gap: 16px; }
 .muted { color: var(--muted); }
 form, .sample-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
 form input { max-width: 100%; min-width: min(100%, 270px); flex: 1; }
@@ -53,9 +53,9 @@ button.secondary { color: var(--accent-dark); background: var(--accent-light); b
 button.secondary:hover { background: #d3ebe4; }
 a { color: var(--accent-dark); text-underline-offset: 3px; }
 :focus-visible { outline: 3px solid #308fa4; outline-offset: 3px; }
-.workspace { display: grid; gap: 14px; margin-top: 20px; }
-.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.metric { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; }
+.workspace { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 20px; }
+.metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.metric { overflow-wrap: anywhere; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; }
 .metric strong { display: block; font-size: 1.65rem; }
 .metric span { display: block; font-size: .875rem; color: var(--muted); }
 .review { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr); gap: 14px; align-items: start; }

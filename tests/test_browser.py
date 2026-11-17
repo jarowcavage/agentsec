@@ -67,7 +67,11 @@ def test_browser_upload_and_recommendation(site, upstreams, width):
         page.get_by_text("Inspect source excerpts").click()
         expect(page.get_by_text("<img src=x", exact=False).last).to_be_visible()
         assert page.locator("img").count() == 0
-        assert page.evaluate("document.documentElement.scrollWidth === innerWidth")
+        overflow = page.evaluate("""() => [...document.querySelectorAll('body *')]
+            .filter(element => element.getBoundingClientRect().right > innerWidth)
+            .map(element => ({tag: element.tagName, class: element.className,
+                              width: element.getBoundingClientRect().width}))""")
+        assert page.evaluate("document.documentElement.scrollWidth === innerWidth"), overflow
         page.get_by_role("button", name="Draft mock issue").click()
         if width == 1280:
             page.get_by_role("button", name="Approve and create mock issue").click()
