@@ -1,0 +1,8 @@
+fastapi==0.163.1
+httpx==0.28.1
+openai==3.52.0
+packageurl-python==0.17.6
+pydantic==2.14.3
+uvicorn==0.54.0
+langgraph==1.2.22
+mcp==1.30.0

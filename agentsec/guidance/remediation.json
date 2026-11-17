@@ -1,0 +1,38 @@
+[
+  {
+    "id": "verify-upgrade",
+    "title": "Verify an upgrade",
+    "keywords": [],
+    "excerpt": "Choose a supported release that addresses the advisory and fits the application's compatibility requirements. Rebuild, run regression tests, regenerate the SBOM from the resulting artifact, and rescan the resolved version."
+  },
+  {
+    "id": "transitive-upgrade",
+    "title": "Remediate a transitive dependency",
+    "keywords": ["transitive", "lockfile", "maven", "gradle"],
+    "excerpt": "Use the package manager's dependency tree to identify the parent that introduces the vulnerable component. Prefer upgrading the nearest maintained parent and verify that the resolved dependency tree contains the intended fixed version."
+  },
+  {
+    "id": "injection-exposure",
+    "title": "Investigate injection exposure",
+    "keywords": ["injection", "execute", "execution", "command", "template", "jndi", "log4j"],
+    "excerpt": "Trace whether attacker-controlled input can reach the affected function or configuration in the deployed application. Check the advisory's prerequisites against the runtime and configuration, and escalate confirmed exposure through the incident response process."
+  },
+  {
+    "id": "prototype-pollution",
+    "title": "Investigate prototype pollution",
+    "keywords": ["prototype", "pollution"],
+    "excerpt": "Identify whether untrusted objects or property paths reach the affected merge or update operation. Add a regression test for unexpected property writes when validating the upgrade."
+  },
+  {
+    "id": "request-routing",
+    "title": "Investigate request routing exposure",
+    "keywords": ["request", "proxy", "ssrf", "redirect", "traversal"],
+    "excerpt": "Inventory the endpoints and proxy routes that can reach the affected handler. Validate the deployed routing and access controls with a targeted regression test after upgrading."
+  },
+  {
+    "id": "no-fixed-release",
+    "title": "Handle an unconfirmed fix",
+    "keywords": ["unconfirmedfix"],
+    "excerpt": "When the advisory does not identify an applicable fixed release, check the maintainer's guidance. If exposure is confirmed, consider restricting the vulnerable feature or removing the dependency while tracking a supported fix."
+  }
+]

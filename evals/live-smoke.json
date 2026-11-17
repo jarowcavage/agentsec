@@ -1,0 +1,30 @@
+{
+  "date_utc": "2026-11-17T10:08:32+00:00",
+  "providers": "live OSV and OpenAI",
+  "calls": 1,
+  "advisory": "GHSA-jfh8-c2jp-5v3q",
+  "findings": 9,
+  "model": "gpt-6-luna",
+  "validated_citations": 4,
+  "scan_ms": 802.661,
+  "triage_ms": 4969.189,
+  "usage": {
+    "input_tokens": 1315,
+    "cached_input_tokens": 0,
+    "output_tokens": 305,
+    "estimated_usd": 0.000284,
+    "pricing_date": "2026-11-17"
+  },
+  "stages": [
+    "validate_upload",
+    "enrich",
+    "save_scan",
+    "lookup_vulnerability",
+    "get_dependency_context",
+    "retrieve_security_guidance",
+    "retrieve_context",
+    "analyze",
+    "validate_response",
+    "finalize"
+  ]
+}

@@ -1,0 +1,8 @@
+**
+!requirements.txt
+!agentsec/
+!agentsec/**
+!samples/
+!samples/workbench-demo.cdx.json
+**/__pycache__/
+**/*.py[cod]

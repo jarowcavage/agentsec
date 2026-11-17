@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AgentSec Workbench</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="frame top-content">
+      <a class="brand" href="/" aria-label="AgentSec Workbench home">
+        <span class="mark" aria-hidden="true">A</span> AgentSec <span class="brand-sub">Workbench</span>
+      </a>
+      <a class="api-link" href="/docs">API documentation <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+  <main class="frame">
+    <div class="intro">
+      <h1>Dependency triage</h1>
+      <p>Find known vulnerabilities in a CycloneDX SBOM and review remediation with its source evidence.</p>
+    </div>
+    <section class="panel upload" aria-labelledby="upload-heading">
+      <div>
+        <h2 id="upload-heading">Scan an SBOM</h2>
+        <p class="muted" id="file-hint">CycloneDX JSON · Up to 2 MiB</p>
+      </div>
+      <form id="upload-form">
+        <label class="sr-only" for="sbom">CycloneDX SBOM file</label>
+        <input id="sbom" type="file" accept=".json,application/json" aria-describedby="file-hint" required>
+        <button type="submit">Scan SBOM</button>
+      </form>
+      <div class="sample-actions">
+        <button type="button" id="sample" class="secondary">Run sample scan</button>
+        <a href="/sample" download="workbench-demo.cdx.json">Download sample</a>
+      </div>
+      <p id="scan-status" role="status" hidden></p>
+    </section>
+    <section class="workspace" id="workspace" aria-label="Scan results" hidden>
+      <div class="metrics" id="metrics"></div>
+      <details class="panel skipped" id="skipped" hidden>
+        <summary>Skipped components</summary>
+        <ul id="skip-list"></ul>
+      </details>
+      <details class="panel trace" id="trace">
+        <summary>Execution trace</summary>
+        <button type="button" id="refresh-trace" class="secondary">Refresh trace</button>
+        <p id="trace-status" role="status" hidden></p>
+        <div id="trace-content"></div>
+      </details>
+      <div class="review">
+        <section class="panel findings" aria-labelledby="findings-heading">
+          <h2 id="findings-heading">OSV findings</h2>
+          <div id="finding-list" class="finding-list"></div>
+        </section>
+        <section class="panel detail" id="detail" aria-labelledby="detail-heading">
+          <h2 id="detail-heading">Finding details</h2>
+          <div id="finding-detail"></div>
+          <p id="recommend-status" role="status" hidden></p>
+          <div id="recommendation"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
