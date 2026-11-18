@@ -24,17 +24,17 @@ An operator investigates an explicitly labeled synthetic finding, inspects the a
 
 ## Status
 
-Assessment complete. Implementation starting with P0. No expansion feature is yet claimed verified.
+Assessment and the core P0–P2 implementation are complete. See verified milestones and remaining scope below.
 
 ## Verified milestones
 
 P0 complete: scoped authenticated MCP, registry, revocation and audit; 58 non-browser/non-live tests passed at its checkpoint.
 P1 and local P2 complete: temporary local issue capabilities, administrator separation, injection attempt denial, isolated offline scenario and reset, responsive UI. Regression including four desktop/mobile workflows: 67 passed, 2 live tests excluded.
 
-P2 gap: no real GitHub issue adapter yet. P3 partial: access certification, explainable missing-owner/unreviewed/no-activity flags and assumptions-only ROI exist. Credential aging, measured dashboard summaries and evaluation reporting are next. No SSO, multi-tenancy or production security certification is claimed.
+At the local P2 checkpoint the GitHub adapter was still pending; it was subsequently implemented and fixture-tested as recorded below. P3 partial: access certification, explainable missing-owner/unreviewed/no-activity flags and assumptions-only ROI exist. Credential aging, measured dashboard summaries and evaluation reporting are next. No SSO, multi-tenancy or production security certification is claimed.
 
 ## Final local verification
 
 Optional connected GitHub adapter implemented after the local milestone: allowlisted repository, independent HTTP Basic approver, exact stored payload, expiring one-use claim, deduplication and uncertain-outcome handling. Two adapter tests use mocked HTTP responses; live write is unverified. Generated security report: 10/10 cases. Complete native regression: 69 passed, 2 live tests excluded, including four desktop/mobile flows. UI inspected in the local browser.
 
-P3 delivers access reviews, explicit risk flags, observed operation summaries, actual synthetic test report and assumptions-only ROI. Advanced multi-finding prioritization, KEV/EPSS and broader sample severity levels remain incomplete. P4 documentation is present, including a 20-minute script and vendor narratives. Fresh Linux CI/container validation of the expansion is the next verification step. Production authentication and hosted deployment are not claimed.
+P3 delivers access reviews, explicit risk flags, observed operation summaries, actual synthetic test report and assumptions-only ROI. Advanced multi-finding prioritization, KEV/EPSS and broader sample severity levels remain incomplete. P4 documentation is present, including a 20-minute script and vendor narratives. Final Linux CI and Docker build/startup/restart verification passed in run 44268059453 at public code commit 57aaa00. Production authentication and hosted deployment are not claimed.

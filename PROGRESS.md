@@ -9,50 +9,42 @@
 | Phase 3 | Local TF-IDF vector retrieval, execution trace, token and cost reporting, failure handling, deterministic evaluation | `e42d246`. The suite passed 58 tests with desktop and mobile Chrome and live OSV. One additional live smoke verified OpenAI through MCP, four citations, 1,315 input and 305 output tokens, and a $0.000284 estimated API cost. All 28 deterministic evaluation cases passed. |
 | Phase 4 local deliverables | Dockerfile, Compose, GitHub Actions, HTTP smoke check, deployment runbook, architecture, threat model, demo walkthrough, interview notes, and résumé bullets | Compose syntax and `actionlint` passed. The HTTP smoke passed against native Uvicorn across a real restart. Hosted CI and Docker restart/persistence verified in run 44173605698. |
 
-The local Workbench is available at [127.0.0.1:8000](http://127.0.0.1:8000/) when Uvicorn is running. The latest native startup returned healthy with recommendations configured. Use the [README](README.md) to restart it.
+## Current status — 2026-11-18
 
-## Verification and current scope
+The previous Phase 4 is verified and the enterprise expansion is implemented in tested milestones. Hosting remains local by user choice. Public source: https://github.com/jarowcavage/agentsec. Local milestone commits preserve implementation history; the public branch contains corresponding published snapshots.
 
-- Phase 4 verification completed: [CI run 44173605698](https://github.com/jarowcavage/agentsec/actions/runs/44173605698) passed both test and container jobs at public commit `82e9dbd`. Docker startup, health, sample and restart persistence passed. The preceding run exposed a Linux mobile overflow; the committed grid sizing fix passed the rerun.
-- Local regression: 57 offline tests passed, including desktop/mobile browsers; lint, formatting and dependency checks passed.
-- Public repository: https://github.com/jarowcavage/agentsec (publication explicitly authorized). Local history retains earlier milestones in addition to published snapshot commits.
-- Hosted app deployment deferred at user request. Local Docker remains unavailable due to another user's socket permissions.
-- Local server restart was blocked by automatic approval review exhausting its usage allowance, not by a safety determination. The last health check found no listener; do not assume the demo is running.
+### Implemented
 
-## Exact next steps
+- P0: persistent agent registry, short-lived opaque process credentials, exact scan scopes, default-deny MCP authorization, immediate revocation/status checks and timestamped persistent policy audit. Commit `5be5236`.
+- P1/local P2: administrator/analyst backend sessions, immutable scoped approval requests, expiration, atomic single-use local issue creation, replay denial, deterministic malicious tool-proposal demonstration and isolated demo reset. Responsive console preserves the original live SBOM workflow. Commit `a35ce57`.
+- Optional connected mode: allowlisted GitHub adapter, independent administrator password, exact reviewed payload, expiring claim, duplicate prevention and uncertain-outcome handling. Fixture-tested only; no real issue was created. Connected requests are outside the resettable demo DB.
+- P3 subset: ownership/access certification, explicit governance risk flags, process credential metadata, measured demo operation summaries, generated test results and assumptions-only ROI calculator.
+- P4 materials: architecture, business case, setup/reset/test runbook, 20-minute demo and identity/AppSec/supply-chain narratives. Commit `33bbfe5`.
 
-1. Implement the enterprise expansion attachment in tested milestones; see docs/IMPLEMENTATION_PLAN.md.
-2. Maintain the working AppSec regression suite and record new verification here.
-3. Start and verify the local demo once execution approval is available. Do not provision hosting.
+### Verification
 
-## Enterprise expansion P0
+- Native regression: **69 passed, 2 opt-in live tests excluded**, including four desktop/mobile browser tests. No new paid OpenAI calls.
+- Generated security evaluation: **10/10** deterministic cases, including GitHub HTTP fixtures. This small suite is not a production security guarantee.
+- Ruff, formatting and both JavaScript syntax checks passed.
+- Expansion application CI passed in run 44267317926. Its Docker build exposed a missing build-context allowlist entry for the generated evaluation report. Fixed in local `9a07a10` / public `9c68b15`.
+- **Final Linux CI is green:** [run 44268059453](https://github.com/jarowcavage/agentsec/actions/runs/44268059453), public code commit `57aaa00`. Fresh dependency setup, lint, unit/API/MCP tests, 28 AppSec evaluations, desktop/mobile browser flows and Docker build/startup/restart persistence all passed.
+- Final audit edge-case fix (`0679f86` local): denied credential issuance for suspended agents is persisted before raising, so the attack UI shows the current denial. All 10 focused security tests passed again; final CI includes this fix.
+- Native local server returned healthy with recommendations configured. The console's offline scenario was visually verified. Open http://127.0.0.1:8000/console while Uvicorn is running. Server execution approval is now available; the earlier usage-limit interruption is resolved.
 
-Persistent agent registry, server-issued short-lived scoped MCP credentials, tool-boundary default-deny enforcement, immediate permission/status revocation, and timestamped authorization audit implemented. Baseline plus new policy tests: 58 passed (browser/live excluded). New agents have no permissions. Initialization does not restore revoked permissions. P1 approval/UI work in progress.
+### Remaining work ranked by demo/business impact
 
-## Enterprise P1 and local P2 milestone
-
-Implemented isolated demo database, server-side analyst/admin sessions (explicit AGENTSEC_DEMO=1), ten-minute immutable action requests, administrator decisions, atomic single-use local issue execution, immediate identity suspension, deterministic hostile tool proposal and persistent audit. Legacy mock approval now also requires an administrator session. Added responsive console with investigation, identities, approvals, attack demonstration, audit, reset, narrative selector and assumption-based ROI calculator. Offline providers run through existing LangGraph/MCP/citation validation. Reset preserves live scans.
-
-Verification: 67 tests passed with desktop/mobile browser flows enabled; 2 opt-in live tests excluded. No OpenAI calls or external writes. Mobile navigation overflow found and fixed by the browser regression. Local P2 is functional; connected GitHub issue creation is not implemented. Production identity federation, stronger session administration and advanced intelligence remain out of scope for this milestone.
-
-## Enterprise integration and interview readiness
-
-2026-11-18: Added optional allowlisted GitHub issue adapter with independent administrator authentication, exact stored approval, five-minute approved grant, pre-network claim, duplicate-request prevention and terminal uncertain outcomes. HTTP-fixture tests passed; no real GitHub issue was created. Connected requests live outside the resettable demo DB.
-
-Added measured demo scan/finding/recommendation counts, recorded workflow-stage timing and approval waiting time. Added generated security evaluation report (10/10 cases), visible test details, process-credential metadata, access certification and transparent risk indicators. Added all requested SE demo/narrative/business/runbook documents and updated architecture. Local console at http://127.0.0.1:8000/console was started and the offline scenario visually verified.
-
-Final native regression: **69 passed, 2 opt-in live tests excluded**, including four desktop/mobile browser tests. Ruff, formatting and JavaScript syntax checks passed. No new paid AI calls or real external writes. Latest expansion still needs Linux CI/container rerun after publication.
-
-### Remaining work ranked by impact
-
-1. Run the published expansion through Linux CI/container checks; record result. Preserve local-only hosting choice.
-2. Optional live GitHub acceptance requires an explicitly configured disposable repository, fine-grained token and separate administrator password. Adapter behavior is fixture-tested; real write is unverified.
-3. Broaden the synthetic sample to multiple priority levels, add verified KEV/EPSS data and deterministic multi-finding prioritization. Current sample contains one synthetic advisory; runtime reachability remains unknown.
-4. Improve production human identity/session lifecycle, individual audit attribution, multi-tenancy, versioned migrations, audit integrity/retention and external-write reconciliation. Local role switching is intentionally demo-only.
-5. Broaden labeled security/quality datasets and measure actual human triage effort. ROI values are assumptions; workflow stage times are not human effort.
+1. Optional real GitHub acceptance test in an explicitly configured disposable repository. Requires a fine-grained Issues-write token and a separate strong approver password. No live integration success is claimed.
+2. Broader synthetic sample with multiple priorities; verified KEV/EPSS enrichment and deterministic multi-finding prioritization. Current offline sample has one synthetic advisory; reachability/exposure remain unknown.
+3. Production human identity federation, per-user attribution, multi-tenancy, session administration, versioned migrations, audit integrity/retention and external-write reconciliation. Demo role switching intentionally lets a local operator select roles.
+4. Larger labeled evaluation corpus and actual human-effort measurements. Recorded stage time is not analyst triage time; ROI values are assumptions.
 
 ### Exact resume steps
 
-Read this file, inspect `git status --short --branch`, and inspect the latest Actions run. Do not repeat completed implementation or spend model calls to recheck fixture behavior. Use `AGENTSEC_DEMO=1 uvicorn agentsec.main:app --host 127.0.0.1 --port 8000` for the console and `docs/DEMO_RUNBOOK.md` for the complete setup/test/reset workflow. Do not run connected writes without configured credentials and the application's explicit human approval.
+1. Inspect `git status --short --branch` and this file; do not repeat finished implementation.
+2. If needed, launch from repository root with `AGENTSEC_DEMO=1 uvicorn agentsec.main:app --host 127.0.0.1 --port 8000`. Use the configured virtual environment. See `docs/DEMO_RUNBOOK.md` for install/test/reset commands.
+3. Follow `docs/DEMO_SCRIPT.md`: Analyst investigation → exact action request → Administrator approval → one-time execution → attack denial → audit → suspension → reset. The default path needs no external credentials.
+4. Prioritize the ranked remaining work only as requested. Keep hosting local. Do not perform external writes without explicit approval and configured credentials.
 
-Expansion CI run 44267317926 found a Docker packaging failure: the existing deny-all build context excluded `evals/`. Added only the generated security report to `.dockerignore`'s allowlist. Container rerun pending; application unit/integration/evaluation checks passed before the packaging fix.
+### Known environment constraints
+
+Docker Desktop's local socket belongs to another macOS account and is inaccessible; container verification ran successfully in GitHub Actions. Native Python is the local demo path. No paid infrastructure or public application was deployed.
