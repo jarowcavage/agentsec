@@ -115,6 +115,16 @@ class Engine:
 
     async def run(self, state):
         try:
+            async with asyncio.timeout(max(0, state["deadline"] - time.time())):
+                await self._run(state)
+        except TimeoutError:
+            state = self.ledger.get(state["id"]) or state
+            state["status"] = "paused"
+            state["error"] = "Investigation deadline exhausted; no successful result claimed."
+            self.event(state, "error", summary=state["error"])
+
+    async def _run(self, state):
+        try:
             if not state.get("candidate"):
                 state["status"] = "preparing"
                 self.event(

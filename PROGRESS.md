@@ -53,7 +53,7 @@ Docker Desktop's local socket belongs to another macOS account and is inaccessib
 
 The 2.0 specification supersedes the previous expansion priorities. Milestone 1 audit/baseline checkpoint: 69 tests passed with live tests excluded. Fixed missing dashboard initialization and restored the server-authenticated persona on reload; all 4 browser tests passed after the repair. No paid API calls. See docs/AGENTSEC_2_IMPLEMENTATION.md for the audited gaps, sourced urllib3 hero scenario and implementation sequence.
 
-Exact next step: implement Milestone 2's durable investigation state and model gateway with conservative budget reservations, then typed bounded agent tool selection. Do not label synthetic traces as replay or execute repository commands on the host. A true capture requires an explicitly approved paid live run after the bounded workflow is ready. Remaining milestones 2–7 are not complete.
+Historical checkpoint superseded by the implementation and acceptance status below.
 
 ## AgentSec 2.0 implementation — current checkpoint
 
@@ -66,3 +66,12 @@ Verification: 84 tests passed, including six desktop/mobile browser flows; two o
 Exact next steps: finish source/recording checks, commit the verified milestone, publish the authorized source changes, inspect Linux CI/container results, and update this file. Direct screenshot review remains outstanding until approval review is available. Native local server was started on 127.0.0.1:8000 with replay as the default. Use docs/AGENTSEC_2_RUNBOOK.md and the 5-/15-minute scripts.
 
 Follow-up hardening: the patch tool now writes the replacement manifest only when invoked, and validation refuses to run before patch creation. Its targeted authorization/side-effect test passed; all 14 focused investigation tests pass. This refines the same captured diff and does not require another paid capture. Docker smoke now checks replay provenance/integrity and the recorded validation result as well as restart persistence.
+
+
+## Acceptance update — 2026-11-18
+
+Source milestone published as `41eca5969d39c37ad9fa519f7242c7d66c63d432`. Direct browser review is now unblocked: desktop (1280px) evidence/test presentation and mobile (390px) layout inspected; reset and replay worked. Local screenshots are saved in the workspace work/ directory. This supersedes the earlier visual-review blocker.
+
+Clean Linux CI run 44392384706 has passed the container build, replay integrity/validation checks, health and restart persistence. Unit/API/MCP, lint and evaluation jobs passed; browser job is still finishing at this checkpoint.
+
+Additional acceptance hardening enforces the overall investigation deadline during in-flight operations, preserves paused state on cancellation, and tests tool timeouts and failed patch validation. All 17 focused investigation tests passed with no API charges. Remaining next step: publish this tested hardening and verify its final CI, then record final totals and limitations. No additional paid calls authorized beyond the existing $3 campaign ceiling are needed.

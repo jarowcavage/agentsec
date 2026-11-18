@@ -206,3 +206,58 @@ def test_patch_tool_changes_isolated_manifest_and_requires_authorization(client,
     Governance(app.state.store).change(ACTOR, revoke="remediation.patch")
     with pytest.raises(PermissionError):
         asyncio.run(runner.run("propose_patch"))
+
+
+@pytest.mark.parametrize("failure", ["timeout", "failed_validation"])
+def test_incomplete_validation_cannot_publish_and_preserves_recovery(client, tmp_path, failure):
+    import asyncio
+
+    engine = Engine(app.state.investigations, app.state.store, tmp_path)
+    calls = []
+
+    class Model:
+        async def decide(self, state):
+            calls.append(state["observations"].copy())
+            tool = "validate_patch" if len(calls) == 1 else "finish"
+            return Decision(tool=tool, explanation="Verify or report uncertainty"), {}
+
+    async def tool(state, name):
+        if failure == "timeout":
+            raise TimeoutError("provider body must not leak")
+        return {"before": {"passed": False}, "after": {"passed": False}}
+
+    engine.gateway = Model()
+    engine.tool = tool
+    run = seed(client)
+    run.update(status="investigating", iteration=0, observations={}, decision=None)
+    asyncio.run(engine.run(run))
+    saved = app.state.investigations.get(run["id"])
+    assert saved["status"] == "paused"
+    assert len(calls) == 2
+    assert "last_error" in calls[1] if failure == "timeout" else "validate_patch" in calls[1]
+    assert "provider body" not in str(saved)
+    assert client.post("/api/investigations/" + run["id"] + "/approve").status_code == 409
+
+
+def test_deadline_cancels_inflight_decision_and_saves_state(client, tmp_path):
+    import asyncio
+
+    engine = Engine(app.state.investigations, app.state.store, tmp_path)
+    cancelled = []
+
+    class Model:
+        async def decide(self, state):
+            try:
+                await asyncio.sleep(10)
+            finally:
+                cancelled.append(True)
+
+    engine.gateway = Model()
+    run = seed(client)
+    run.update(deadline=time.time() + 0.1, status="investigating", iteration=0, decision=None)
+    started = time.monotonic()
+    asyncio.run(engine.run(run))
+    saved = app.state.investigations.get(run["id"])
+    assert cancelled and time.monotonic() - started < 2
+    assert saved["status"] == "paused"
+    assert "deadline exhausted" in saved["error"]
