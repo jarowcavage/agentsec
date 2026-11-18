@@ -8,3 +8,8 @@
 **/*.py[cod]
 !evals/
 !evals/security-results.json
+!recordings/
+!recordings/hero.json
+!samples/redirect-client/
+!samples/redirect-client/*.py
+!samples/redirect-client/requirements.txt

@@ -46,7 +46,7 @@ def test_browser_upload_and_recommendation(site, upstreams, width):
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.request.post(site + "/api/enterprise/session", data={"role": "administrator"})
-        page.goto(site)
+        page.goto(site + "/legacy")
 
         if width == 1280:
             page.get_by_role("button", name="Run sample scan").click()
@@ -101,6 +101,9 @@ def test_governed_demo_console(site, width):
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto(site + "/console")
         page.get_by_role("button", name="Switch persona").click()
+        page.reload()
+        expect(page.locator("#observed")).to_contain_text("Measured demo operations")
+        expect(page.locator("#persona")).to_have_value("analyst")
         page.get_by_role("button", name="Run Demo Scenario").click()
         expect(page.get_by_text("SYNTHETIC PROVIDERS · NO AI CALL")).to_be_visible()
         page.get_by_role("button", name="Request temporary issue permission").click()
@@ -123,4 +126,40 @@ def test_governed_demo_console(site, width):
         page.get_by_role("button", name="Reset Demo").click()
         expect(page.get_by_role("status")).to_contain_text("Operation completed")
         assert not errors
+        browser.close()
+
+
+@pytest.mark.parametrize("width", [1280, 390])
+def test_authentic_replay_workspace(site, upstreams, width):
+    from playwright.sync_api import expect, sync_playwright
+
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch(executable_path=os.getenv("AGENTSEC_CHROMIUM"))
+        page = browser.new_page(viewport={"width": width, "height": 1000})
+        errors = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        page.goto(site)
+        expect(page.get_by_role("heading", name="Find the risk. Prove the fix.")).to_be_visible()
+        page.get_by_role("button", name="Investigate Repository").click()
+        expect(page.locator("#run-status")).to_contain_text("REPLAY")
+        page.get_by_role("button", name="Next recorded step").click()
+        expect(page.locator("#timeline")).to_contain_text("inspect repository")
+        page.get_by_role("button", name="Show complete outcome").click()
+        expect(page.locator("#summary")).to_contain_text("verified patch")
+        expect(page.locator("#summary")).to_contain_text("$0 new API charges")
+        page.get_by_role("button", name="Diff", exact=True).click()
+        expect(page.locator(".diff")).to_contain_text("-urllib3==1.26.18")
+        expect(page.locator(".diff")).to_contain_text("+urllib3==2.8.0")
+        page.get_by_role("button", name="Tests", exact=True).click()
+        expect(page.get_by_text("3 / 3 passed")).to_be_visible()
+        page.get_by_role("button", name="Access", exact=True).click()
+        page.get_by_role("button", name="Inspect recorded denial").click()
+        expect(page.get_by_role("heading", name="DENIED", exact=True)).to_be_visible()
+        assert page.evaluate("document.documentElement.scrollWidth === innerWidth")
+        page.get_by_role("button", name="Presentation mode", exact=True).click()
+        assert page.evaluate("document.documentElement.scrollWidth === innerWidth")
+        page.get_by_role("button", name="Restart presentation").click()
+        expect(page.locator("#summary")).to_be_hidden()
+        assert not errors
+        assert not upstreams.model_requests and not upstreams.osv_requests
         browser.close()

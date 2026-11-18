@@ -48,3 +48,21 @@ The previous Phase 4 is verified and the enterprise expansion is implemented in 
 ### Known environment constraints
 
 Docker Desktop's local socket belongs to another macOS account and is inaccessible; container verification ran successfully in GitHub Actions. Native Python is the local demo path. No paid infrastructure or public application was deployed.
+
+## AgentSec 2.0 — active scope
+
+The 2.0 specification supersedes the previous expansion priorities. Milestone 1 audit/baseline checkpoint: 69 tests passed with live tests excluded. Fixed missing dashboard initialization and restored the server-authenticated persona on reload; all 4 browser tests passed after the repair. No paid API calls. See docs/AGENTSEC_2_IMPLEMENTATION.md for the audited gaps, sourced urllib3 hero scenario and implementation sequence.
+
+Exact next step: implement Milestone 2's durable investigation state and model gateway with conservative budget reservations, then typed bounded agent tool selection. Do not label synthetic traces as replay or execute repository commands on the host. A true capture requires an explicitly approved paid live run after the bounded workflow is ready. Remaining milestones 2–7 are not complete.
+
+## AgentSec 2.0 implementation — current checkpoint
+
+User authorized the remaining implementation and up to $3 total new OpenAI usage. Implemented the bounded agent, constrained MCP tools, durable state and cost ledger, real sandbox validation, patch publication, unified presentation workspace and authentic replay. The captured real scenario upgrades urllib3 1.26.18 to 2.8.0, verifies the targeted advisory no longer matches, observes the original regression failure and three passing patched checks, exercises policy denial and releases the reviewed local patch.
+
+Three live attempts: two development failures, one successful capture. Eleven paid calls total; $0.0016695 estimated across all attempts, no outstanding reservations. Successful capture: six calls, $0.0012082 estimated. No more paid calls are needed. Replay is in recordings/hero.json; all attempt outcomes are in recordings/capture-evaluation.json. No GitHub issue or public deployment was created.
+
+Verification: 84 tests passed, including six desktop/mobile browser flows; two opt-in legacy live tests excluded. Thirteen focused investigation/policy tests passed. Direct visual review was blocked by automatic approval review hitting its usage quota. This is distinct from the successful browser tests. Do not bypass that browser restriction with another automation mechanism.
+
+Exact next steps: finish source/recording checks, commit the verified milestone, publish the authorized source changes, inspect Linux CI/container results, and update this file. Direct screenshot review remains outstanding until approval review is available. Native local server was started on 127.0.0.1:8000 with replay as the default. Use docs/AGENTSEC_2_RUNBOOK.md and the 5-/15-minute scripts.
+
+Follow-up hardening: the patch tool now writes the replacement manifest only when invoked, and validation refuses to run before patch creation. Its targeted authorization/side-effect test passed; all 14 focused investigation tests pass. This refines the same captured diff and does not require another paid capture. Docker smoke now checks replay provenance/integrity and the recorded validation result as well as restart persistence.

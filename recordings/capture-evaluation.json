@@ -1,0 +1,31 @@
+{
+  "scope": "All three development capture attempts; not a statistical reliability benchmark",
+  "attempts": [
+    {
+      "id": "cc220bcf-f98c-44fd-a6c5-c8762fd34e2c",
+      "status": "paused",
+      "model_calls": 3,
+      "estimated_usd": 0.0001606,
+      "error": "Investigation time or iteration limit exhausted"
+    },
+    {
+      "id": "4ffe14c2-9e48-4141-be26-567bcb9fbdfa",
+      "status": "paused",
+      "model_calls": 2,
+      "estimated_usd": 0.0003007,
+      "error": "Investigation time or iteration limit exhausted"
+    },
+    {
+      "id": "cea666f7-e5bd-4d2a-8a39-a92c8fca4cea",
+      "status": "completed",
+      "model_calls": 6,
+      "estimated_usd": 0.0012082,
+      "error": null
+    }
+  ],
+  "campaign": {
+    "calls": 11,
+    "estimated_usd": 0.0016695,
+    "unsettled_reservation_usd": 0
+  }
+}

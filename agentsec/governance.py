@@ -73,7 +73,7 @@ class Governance:
             )
             # Only bootstrap once: initialization must never restore revoked permissions.
             if db.execute("SELECT COUNT(*) FROM governance_events").fetchone()[0] == 0:
-                for action in TOOL_ACTIONS.values():
+                for action in ("vulnerability.read", "sbom.read", "remediation.analyze"):
                     db.execute(
                         "INSERT OR IGNORE INTO agent_permissions VALUES (?,?,?)",
                         (PRIMARY_AGENT, action, "scan:*"),

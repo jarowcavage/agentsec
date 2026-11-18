@@ -30,6 +30,8 @@ jobs:
           ruff check .
           ruff format --check .
           node --check agentsec/static/app.js
+          node --input-type=module --check < agentsec/static/workspace.js
+          node --input-type=module --check < agentsec/static/workspace-components.js
           python -m pip check
       - name: Unit, API, MCP, and approval tests
         run: python -m pytest -q -m 'not browser and not live' --ignore=tests/test_evaluation.py

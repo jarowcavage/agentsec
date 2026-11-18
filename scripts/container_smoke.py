@@ -1,6 +1,7 @@
 """Check the HTTP service and persist an empty scan without contacting upstream providers."""
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -24,6 +25,11 @@ def main():
     assert status == 200 and health["status"] == "ok"
     status, sample = read(f"{base}/sample")
     assert status == 200 and sample["bomFormat"] == "CycloneDX"
+    status, recording = read(f"{base}/api/investigations/recording")
+    assert status == 200 and recording["run"]["mode"] == "live"
+    encoded = json.dumps(recording["run"], sort_keys=True, separators=(",", ":")).encode()
+    assert hashlib.sha256(encoded).hexdigest() == recording["sha256"]
+    assert recording["run"]["observations"]["validate_patch"]["after"]["passed"] is True
     if args.save:
         payload = json.dumps({"bomFormat": "CycloneDX", "specVersion": "1.6", "components": []})
         status, scan = read(f"{base}/api/scans", payload=payload.encode())

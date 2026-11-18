@@ -7,7 +7,7 @@ async function api(path, body){const res=await fetch('/api/enterprise'+path,body
 async function action(fn){try{await fn();$('notice').textContent='Operation completed · local synthetic demo.';}catch(e){$('notice').textContent=e.message;}}
 function button(label,fn){const el=text('button',label);el.onclick=()=>action(fn);return el;}
 function card(title, content){const el=text('article','');el.append(text('h3',title),text('p',content));return el;}
-async function refresh(){state=await api('/overview');render();}
+async function refresh(){state=await api('/overview');$('persona').value=state.role;render();}
 function render(){
  $('metrics').replaceChildren();const allowed=state.audit.filter(e=>e.outcome==='allowed').length;const denied=state.audit.filter(e=>e.outcome==='denied').length;
  for(const [name,value] of [['Agent identities',state.agents.length],['Pending approvals',state.approvals.filter(a=>a.status==='pending').length],['Policy denials (last 200 events)',denied],['Simulated issues created',state.issues.length]]){const el=text('div','','metric');el.append(text('strong',value),text('span',name));$('metrics').append(el);}
@@ -40,3 +40,8 @@ async function connected(path, body){
 async function connectedRefresh(){const rows=await connected('/requests');$('connected-requests').replaceChildren();for(const r of rows){const el=card(r.title,`REAL GITHUB WRITE · ${r.repository} · ${r.status} · expires ${new Date(r.expires*1000).toLocaleString()}`);el.append(text('pre',r.body),button('Approve real write',async()=>{if(!window.confirm(`Approve this exact issue in ${r.repository}?`))return;await connected('/requests/'+r.id+'/approve',{});await connectedRefresh();}),button('Create GitHub issue',async()=>{if(!window.confirm(`Create the displayed issue in ${r.repository}? This writes to GitHub.`))return;await connected('/requests/'+r.id+'/execute',{});await connectedRefresh();}),button('Revoke connected request',async()=>{await connected('/requests/'+r.id+'/revoke',{});await connectedRefresh();}));if(r.issue_url){const link=text('a','Open created issue');link.href=r.issue_url;el.append(link);}$('connected-requests').append(el);}}
 $('load-connected').onclick=()=>action(connectedRefresh);
 $('connected-proposal').onsubmit=e=>{e.preventDefault();action(async()=>{await connected('/requests',{scan_id:$('live-scan').value,finding_id:Number($('live-finding').value)});await connectedRefresh();});};
+
+// Restore an existing server session without silently selecting a demo identity.
+refresh().catch(error => {
+ $('notice').textContent=error.message;
+});

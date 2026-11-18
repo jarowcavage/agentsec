@@ -13,6 +13,7 @@ RUN pip install --no-cache-dir --disable-pip-version-check -r requirements.txt \
 COPY agentsec/ agentsec/
 COPY samples/ samples/
 COPY evals/ evals/
+COPY recordings/ recordings/
 USER 10001:10001
 EXPOSE 8000
 

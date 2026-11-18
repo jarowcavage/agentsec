@@ -17,6 +17,8 @@ from .enterprise import initialize as initialize_enterprise
 from .enterprise import router as enterprise_router
 from .github_integration import initialize as initialize_github
 from .github_integration import router as github_router
+from .investigation.api import initialize as initialize_investigations
+from .investigation.api import router as investigation_router
 from .mcp_client import MCPEvidence
 from .osv import OSVClient, OSVError
 from .recommend import Recommendation, RecommendationError, Recommender, load_guidance
@@ -44,6 +46,7 @@ async def lifespan(app: FastAPI):
     app.state.store = store
     initialize_enterprise(app.state)
     initialize_github(store)
+    initialize_investigations(app.state)
     app.state.mcp = MCPEvidence(store, load_guidance())
     app.state.pending = set()
     app.state.recommender = None
@@ -63,6 +66,7 @@ app = FastAPI(title="AgentSec Workbench", version="0.1.0", lifespan=lifespan)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["localhost", "127.0.0.1"])
 app.include_router(enterprise_router)
 app.include_router(github_router)
+app.include_router(investigation_router)
 app.mount("/static", StaticFiles(directory=ROOT / "agentsec/static"), name="static")
 
 
@@ -88,6 +92,11 @@ async def security_headers(request: Request, call_next):
 
 @app.get("/", include_in_schema=False)
 async def home():
+    return FileResponse(ROOT / "agentsec/static/workspace.html")
+
+
+@app.get("/legacy", include_in_schema=False)
+async def legacy():
     return FileResponse(ROOT / "agentsec/static/index.html")
 
 

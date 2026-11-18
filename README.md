@@ -1,148 +1,64 @@
-# AgentSec Workbench
+# AgentSec
 
-AgentSec Workbench is a local application security triage prototype. The Workbench takes a CycloneDX JSON inventory, looks up exact package versions in [OSV](https://google.github.io/osv.dev/post-v1-querybatch/), and drafts a recommendation for a selected finding using [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs). The browser shows each citation and lets reviewers inspect its source excerpt.
+**Investigate a real vulnerability. Produce a patch. Prove the change. Govern its release.**
 
-## Governed enterprise demonstration
+AgentSec is a local portfolio application built with FastAPI, LangGraph, MCP, SQLite and OpenAI. Its curated investigation repairs a urllib3 dependency in a disposable Python client. The default experience replays an authentic captured execution, with real evidence, model decisions, a dependency diff, sandbox test results and hash-bound human approval.
 
-Start with `AGENTSEC_DEMO=1 uvicorn agentsec.main:app --host 127.0.0.1 --port 8000` and open [the console](http://127.0.0.1:8000/console). The default interview path uses explicitly labeled synthetic providers, real MCP authorization, human role checks, single-use approvals and an isolated resettable database. No external credentials are needed. Do not expose local persona switching publicly.
+## Start the interview demo — no API key required
 
-See [the setup and troubleshooting runbook](docs/DEMO_RUNBOOK.md), [20-minute demo](docs/DEMO_SCRIPT.md), [business case](docs/BUSINESS_CASE.md), and [implementation status](docs/IMPLEMENTATION_PLAN.md). Connected GitHub is optional, separately authenticated and disabled until configured; it is tested with HTTP fixtures, not claimed live-verified. Legacy mock approvals now require an administrator demo session established in the console.
+```sh
+docker compose up --build
+```
 
-## Run locally
+Open [AgentSec](http://127.0.0.1:8000/), click **Investigate Repository**, then **Show complete outcome**. Inspect Evidence, Diff, Tests and Access. Replay makes **zero new AI calls** and performs **no external writes**.
 
-Use Python 3.12 or later with network access to install dependencies and query OSV. Recommendation generation also requires an OpenAI API key with access to the configured model.
+Without Docker, use Python 3.12+:
 
 ```sh
 python3.12 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-uvicorn agentsec.main:app --host 127.0.0.1 --port 8000
+. .venv/bin/activate
+pip install -r requirements-dev.txt
+AGENTSEC_DEMO=1 uvicorn agentsec.main:app --host 127.0.0.1 --port 8000
 ```
 
-Open [the local workbench](http://127.0.0.1:8000) and click **Run sample scan**, or upload [the synthetic SBOM](samples/workbench-demo.cdx.json). Select the Log4Shell finding (`GHSA-jfh8-c2jp-5v3q`) to see its package, advisory, and fixed range endpoints.
+## What is real
 
-To enable **Generate recommendation**, copy `.env.example` to `.env`, set `OPENAI_API_KEY` in that file, and restart Uvicorn from a shell that exports its values. `OPENAI_MODEL` defaults to [`gpt-6-luna`](https://developers.openai.com/api/docs/models/gpt-6-luna). An override must support Structured Outputs through the Responses API.
+- A bounded LangGraph agent chooses typed MCP operations; server checks enforce completion criteria.
+- Public OSV advisory/version checks and hash-verified PyPI artifacts.
+- An inspectable urllib3 dependency patch in an isolated workspace.
+- Actual sample tests: the original version fails the redirect-header policy regression; the captured upgraded version passes all three tests.
+- Tool-boundary identity authorization, scoped expiring capabilities, revocation and single-use local artifact publication.
+- Durable investigation history, explicit resume, persistent spending reservations and content-addressed model caching.
+
+The captured successful run used six OpenAI calls at an estimated **$0.0012082**. All three development attempts, including two failures, totaled **$0.0016695**. These are observed estimates for this scenario, not general performance or billing guarantees. See [capture outcomes](recordings/capture-evaluation.json).
+
+## Modes and boundaries
+
+**Replay** is the default, immutable recorded experience. **Live** requires explicit initiation, an exported OpenAI key and a supported sandbox. **Fixture tests** mock providers and are never presented as live investigations. The primary workflow releases a local patch; it does not pretend to create a pull request.
+
+Live defaults: $1/run, $3 cumulative campaign estimate/reservations, 10 model calls, 900 output tokens/call and a seven-minute deadline. Unsupported pricing or sandbox configuration fails closed. See the [runbook](docs/AGENTSEC_2_RUNBOOK.md) before enabling live execution or recapturing a paid run.
+
+This is a single-operator prototype for a curated Python repository, not arbitrary-repository autonomous repair or production SaaS. Package-level and regression evidence do not establish runtime reachability or universal exploit prevention. Demo role switching is not SSO. No public application is deployed.
+
+## Demonstrate and inspect
+
+- [5-minute recruiter demo](docs/DEMO_5_MINUTES.md)
+- [15-minute technical demo](docs/DEMO_15_MINUTES.md)
+- [Setup, reset, tests and failure recovery](docs/AGENTSEC_2_RUNBOOK.md)
+- [Architecture, trust boundaries and decisions](docs/AGENTSEC_2_ARCHITECTURE.md)
+- [Implementation ledger](docs/AGENTSEC_2_IMPLEMENTATION.md) and [progress/resume notes](PROGRESS.md)
+- [Business case and assumptions](docs/BUSINESS_CASE.md)
+
+Existing CycloneDX/OSV/OpenAI triage remains at `/legacy`; agent governance and optional connected GitHub issues remain at `/console`. Those interfaces preserve earlier functionality and have separate, explicit synthetic/live labels.
+
+## Verify
 
 ```sh
-set -a
-. ./.env
-set +a
-uvicorn agentsec.main:app --host 127.0.0.1 --port 8000
-```
-
-Review **Risk assessment**, **Recommended steps**, and **What to verify**, then open **Inspect source excerpts**. An upload or a sample scan makes zero OpenAI calls. A click generates a single bounded model request, and subsequent requests for the same finding reuse the result while the scan is available. Upstream OpenAI billing depends on the account, model, and usage.
-
-## Structure
-
-```text
-agentsec/
-  main.py                    FastAPI routes
-  workflow.py                LangGraph scan, triage, and review flows
-  mcp_server.py              Read-only MCP server using stdio
-  mcp_client.py              Allowlisted tool calls and response verification
-  storage.py                 SQLite scans, recommendations, reviews, and audit records
-  sbom.py                    CycloneDX parsing and dependency classification
-  osv.py                     Batched OSV lookups and advisory normalization
-  recommend.py               Retrieval, structured generation, citation validation
-  retrieval.py               Local TF-IDF vectors and cosine similarity
-  telemetry.py               Token counts and dated cost estimates
-  guidance/                  Bundled remediation passages with stable source IDs
-  static/                    Browser UI served by FastAPI
-samples/                     Synthetic CycloneDX sample
-tests/                       Unit, integration, browser, and opt-in live tests
-```
-
-```mermaid
-flowchart LR
-    UI["Browser"] -->|CycloneDX JSON| API["FastAPI"]
-    API --> Parse["Parse package coordinates and dependency graph"]
-    Parse --> OSV["OSV batch lookup and advisory detail"]
-    OSV --> Scan["Findings in SQLite"]
-    Scan --> UI
-    UI -->|Select finding and request recommendation| API
-    API --> Retrieve["LangGraph calls the read-only MCP server"]
-    Retrieve --> LLM["OpenAI Responses API"]
-    LLM --> Check["Validate structure, source IDs, and exact quotes"]
-    Check --> UI
-    UI -->|Explicit approval| Review["Review transaction and mock issue record"]
-```
-
-## Design decisions and limits
-
-- **Matching** uses versioned Package URLs and OSV's ecosystem-aware matching. The ingestion subset is CycloneDX 1.4–1.7 JSON component inventories, up to 2 MiB and 250 components. It checks Cargo, Composer, RubyGems, Go, Maven, npm, NuGet, and PyPI identifiers. It reports components with missing, conflicting, or unsupported coordinates as skipped. Dependency depth is inferred from the declared path from the metadata component, with unknown depth reported explicitly. The parser validates fields it uses.
-- **Enrichment** deduplicates versioned package coordinates, batches up to 50 queries, follows per-query pagination, and fetches each matched advisory once per scan. A lookup failure returns an error. Fixed range endpoints come from exact package coordinates in the advisory when available. The endpoints may span release branches and require verification before an upgrade.
-- **Retrieval** indexes version-controlled guidance passages as sparse TF-IDF vectors. Cosine similarity ranks up to two passages, and baseline verification guidance is always included. The index runs locally without embedding API calls. TF-IDF relies on vocabulary overlap. The selected advisory and retrieved excerpts are passed as evidence.
-- **Evidence checks** enforce a structured response and verify every cited quote against its named source. An exact quote establishes provenance. A reviewer still needs to judge whether it supports the generated claim and whether the vulnerability is reachable in their runtime.
-- **Trust and data flow** use fixed OSV endpoints and send only package coordinates for matching. PURL qualifiers and subpaths are omitted from upstream requests for the supported ecosystems. The model receives the selected package coordinate, advisory excerpts, dependency relationship labels, and bundled guidance. The API supplies no model tools and keeps the key server-side. External evidence is treated as untrusted text and rendered as text in the UI. The model request uses `store=False`. The service is intended for loopback use with synthetic or public SBOMs.
-- **MCP** runs the official Python SDK server in a local stdio subprocess. The backend calls three allowlisted read-only tools for advisory, dependency, and guidance data. It verifies advisory and dependency data against the saved finding and guidance against the bundled catalog before using the results. The model receives evidence fields and has no tool or write access.
-- **Review** lets the operator draft an issue after a validated recommendation exists. Approval creates one record in the local mock tracker, and rejection closes the review without creating an issue. SQLite commits the decision, mock issue, and audit record together. Repeating the same decision returns the existing result.
-- **State** persists in SQLite at `.agentsec/workbench.db` by default. Set `AGENTSEC_DATABASE` to override it. Reloading the page restores a scan from its URL fragment. Run with one Uvicorn worker to deduplicate concurrent model calls. The single-operator loopback app uses unguessable scan and review IDs and has no user accounts.
-
-In an interview, walk through how the same exact package identifier goes from upload to OSV, then show the separate decision to spend a model call on one advisory. The evidence drawer shows what went into that call and what a reviewer needs to verify.
-
-## API
-
-Open [Swagger UI](http://127.0.0.1:8000/docs) or [OpenAPI JSON](http://127.0.0.1:8000/openapi.json).
-
-| Method and path | Behavior |
-| --- | --- |
-| `GET /health` | Returns process health and whether a key is configured. |
-| `GET /sample` | Returns the synthetic CycloneDX JSON file. |
-| `POST /api/scans` | Accepts raw CycloneDX JSON with `Content-Type: application/json`. Returns the scan ID, coverage, skipped components, and normalized findings. |
-| `GET /api/scans/{scan_id}` | Retrieves a saved scan. |
-| `POST /api/scans/{scan_id}/findings/{finding_id}/recommendation` | Returns a structured assessment and its source excerpts. Returns 503 when the key is missing or 502 when the model call or citation validation fails. |
-
-```sh
-curl --fail-with-body -H 'Content-Type: application/json' \
-  --data-binary @samples/workbench-demo.cdx.json http://127.0.0.1:8000/api/scans
-```
-
-## Tests
-
-The default suite uses HTTP transport test doubles for OSV and OpenAI. The integration tests exercise the real FastAPI routes, OSV adapter, and OpenAI SDK request and response handling.
-
-```sh
-python -m pip install -r requirements-dev.txt
 ruff check .
 ruff format --check .
-python -m pytest -q
-```
-
-Create and review a mock issue from a saved recommendation in the UI or through the issue-review routes in Swagger.
-
-Run the opt-in desktop and mobile browser tests with bundled Chromium. Set `AGENTSEC_CHROMIUM` to the absolute path of an installed Chrome/Chromium executable to use it instead.
-
-```sh
+python -m pytest -q -m 'not live and not browser'
 python -m playwright install chromium
 AGENTSEC_BROWSER=1 python -m pytest -q -m browser
 ```
 
-Run the public OSV smoke test or, separately, the one-call OpenAI smoke test. The latter uses the sample's public package data and requires an exported API key.
-
-```sh
-AGENTSEC_LIVE_OSV=1 python -m pytest -q tests/test_live.py::test_live_osv
-AGENTSEC_LIVE_OPENAI=1 python -m pytest -q tests/test_live.py::test_live_openai
-```
-
-## Evaluation and traces
-
-Open **Execution trace** after scanning to see stage and MCP timings, statuses and retries, model token counts, and estimated cost where a dated rate is available. The trace excludes prompts, document text, and API keys. Cost is an estimate using the [published standard GPT‑6 Luna rates](https://developers.openai.com/api/docs/models/gpt-6-luna).
-
-```sh
-python scripts/evaluate.py
-python scripts/live_smoke.py
-```
-
-The first command writes the [fixture evaluation report](evals/results.json). The second uses the configured key for one real OpenAI request and writes the [live smoke report](evals/live-smoke.json). Fixture latency and live latency measure different workloads. Citation results measure quote and source validation and require human judgment for semantic support.
-
-## Project status
-
-See [PROGRESS.md](PROGRESS.md) for completed milestones, test results, blockers, and the next steps.
-
-## Demo and operations
-
-- [Architecture, trust boundaries, and threat model](docs/ARCHITECTURE.md)
-- [Docker Compose, hosted demo runbook, and CI](docs/deployment.md)
-- [Three-minute technical demo](docs/demo.md)
-- [Evaluation summary](docs/evaluation.md)
-- [Interview answers and résumé bullets](docs/interview.md)
+Default tests spend no OpenAI credits. Fresh live capture is a separate opt-in operation; configuration and approvals are documented in the runbook.
