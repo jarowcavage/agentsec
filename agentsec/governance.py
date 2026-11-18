@@ -113,20 +113,25 @@ class Governance:
     def credential(self, agent_id, resource, lifetime=60):
         """Trusted launcher API; not exposed as an agent tool or public HTTP route."""
         token = secrets.token_urlsafe(32)
+        denied = False
         with self.store.connection() as db:
             agent = db.execute("SELECT status FROM agents WHERE id=?", (agent_id,)).fetchone()
             if not agent or agent["status"] != "active":
-                raise AuthorizationDenied("Agent unavailable.")
-            db.execute(
-                "INSERT INTO agent_credentials VALUES (?,?,?,?,?)",
-                (
-                    hashlib.sha256(token.encode()).hexdigest(),
-                    agent_id,
-                    time.time() + min(lifetime, 300),
-                    0,
-                    resource,
-                ),
-            )
+                denied = True
+                self._event(db, agent_id, "credential.issue", resource, "denied", "Agent unavailable")
+            else:
+                db.execute(
+                    "INSERT INTO agent_credentials VALUES (?,?,?,?,?)",
+                    (
+                        hashlib.sha256(token.encode()).hexdigest(),
+                        agent_id,
+                        time.time() + min(lifetime, 300),
+                        0,
+                        resource,
+                    ),
+                )
+        if denied:
+            raise AuthorizationDenied("Agent unavailable.")
         return token
 
     def authorize(self, token, tool, resource):

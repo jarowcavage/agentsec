@@ -49,6 +49,11 @@ def test_offline_approval_single_use_and_revocation(client, monkeypatch, upstrea
         == 200
     )
     assert client.post("/api/enterprise/scenario").status_code == 409
+    denied_attack = client.post("/api/enterprise/attack").json()
+    assert denied_attack["decision"] == "denied"
+    assert denied_attack["audit"]["action"] == "credential.issue"
+    assert denied_attack["audit"]["outcome"] == "denied"
+    assert denied_attack["audit"]["resource"] == "scan:synthetic-investigation"
 
 
 def test_expired_or_manipulated_capability_cannot_execute(client, monkeypatch):

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T08:23:32.643916+00:00",
+  "generated_at": "2026-11-18T08:33:07.523690+00:00",
   "scope": "Synthetic deterministic governance tests; not production certification",
   "passed": 10,
   "total": 10,
@@ -7,52 +7,52 @@
     {
       "name": "test_scoped_identity_and_audit",
       "outcome": "passed",
-      "duration_seconds": 0.019
+      "duration_seconds": 0.016
     },
     {
       "name": "test_expiration_revocation_and_restart",
       "outcome": "passed",
-      "duration_seconds": 0.011
+      "duration_seconds": 0.01
     },
     {
       "name": "test_new_agent_has_no_permissions",
       "outcome": "passed",
-      "duration_seconds": 0.008
+      "duration_seconds": 0.007
     },
     {
       "name": "test_human_role_separation_and_attack",
       "outcome": "passed",
-      "duration_seconds": 0.062
+      "duration_seconds": 0.06
     },
     {
       "name": "test_offline_approval_single_use_and_revocation",
       "outcome": "passed",
-      "duration_seconds": 0.92
+      "duration_seconds": 1.018
     },
     {
       "name": "test_expired_or_manipulated_capability_cannot_execute",
       "outcome": "passed",
-      "duration_seconds": 0.875
+      "duration_seconds": 0.877
     },
     {
       "name": "test_revoked_grant_and_reset_isolation",
       "outcome": "passed",
-      "duration_seconds": 0.892
+      "duration_seconds": 0.942
     },
     {
       "name": "test_legacy_approval_also_requires_human_admin",
       "outcome": "passed",
-      "duration_seconds": 0.97
+      "duration_seconds": 0.979
     },
     {
       "name": "test_connected_requires_independent_approval_and_consumes",
       "outcome": "passed",
-      "duration_seconds": 0.898
+      "duration_seconds": 1.006
     },
     {
       "name": "test_target_change_revocation_and_ambiguous_write",
       "outcome": "passed",
-      "duration_seconds": 0.882
+      "duration_seconds": 0.916
     }
   ]
 }
