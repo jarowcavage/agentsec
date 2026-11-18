@@ -2,7 +2,7 @@
 
 ## Audit and reusable components
 
-Keep FastAPI, SQLite, CycloneDX/OSV adapters, exact citation validation, real stdio MCP, server-issued scoped credentials, persistent policy audit and guarded connected writes. Existing LangGraph investigation is linear, not autonomous tool selection. Existing demo is synthetic provider execution, not authentic replay. Existing proposals create issues, not code patches. Local Docker access remains unavailable; container execution must fail closed until a usable sandbox exists.
+Keep FastAPI, SQLite, CycloneDX/OSV adapters, exact citation validation, real stdio MCP, server-issued scoped credentials, persistent policy audit and guarded connected writes. At baseline, the original LangGraph investigation was linear, its demo used synthetic providers, and proposals created issues rather than patches. The new primary workflow extends those capabilities; the legacy surfaces remain accessible. Local Docker access remains unavailable; container execution must fail closed until a usable sandbox exists.
 
 ## Curated hero scenario
 
@@ -17,15 +17,15 @@ Generate an inspectable manifest diff in an isolated workspace, regenerate packa
 3. Remediation: curated sample, sandbox executor, patch artifact, real tests and before/after inventory/advisory evidence. Fail closed without sandbox.
 4. Governance: authorize each tool/action, bind approval to artifact hash and target; preserve revocation/replay controls.
 5. Unified workspace: findings/navigation, investigation timeline, contextual evidence/diff; retire competing entry points after parity tests.
-6. Presentation/replay: immutable authenticated capture of a successful real run, separate from fixture tests; 5/15-minute presentation paths. Replay is unavailable until an actual authorized live run exists.
+6. Presentation/replay: hash-checked authentic capture of a successful real run, separate from fixture tests; 5/15-minute presentation paths. Replay is unavailable until an actual authorized live run exists.
 7. Acceptance: clean startup, browser/security/failure-path checks and verified milestones committed.
 
 ## Current verified status
 
 Milestones 2–6 implemented: bounded model-selected LangGraph/MCP investigation, persistent state and spending reservations, verified package artifacts, actual isolated before/after tests, dependency diff, local hash-bound publication, unified workspace, presentation controls and authentic replay. The live capture used macOS Seatbelt; no arbitrary repository commands ran outside sandboxing. Docker is an alternative validation executor and remains to be separately acceptance-tested.
 
-Milestone 7: 84 automated tests passed with six desktop/mobile browser flows; two opt-in legacy live tests were excluded. The complete curated live scenario succeeded on the third development attempt. The first failed on an MCP response schema mismatch, the second on repeated completed-tool selection; both remain disclosed. Eleven paid calls across all three attempts had estimated total usage of $0.0016695, within the user's $3 authorization. The successful six-call recording cost $0.0012082 estimated.
+Milestone 7: 82 non-browser tests passed locally after deadline/failure-recovery hardening. Final Linux CI run 44392759807 passed all 88 tests: 54 unit/API/MCP/policy tests, 28 evaluation cases and six desktop/mobile browser flows, plus Docker startup/replay/restart checks. Two opt-in legacy live tests are excluded from default verification. The complete curated live scenario succeeded on the third development attempt. The first failed on an MCP response schema mismatch, the second on repeated completed-tool selection; both remain disclosed. Eleven paid calls across all three attempts had estimated total usage of $0.0016695, within the user's $3 authorization. The successful six-call recording cost $0.0012082 estimated.
 
-No further paid calls are needed for replay or default tests. Direct screenshot review was blocked by the automatic approval-review usage limit; no screenshot or subjective visual-polish acceptance is claimed. Final Linux CI/container verification is pending publication. See PROGRESS.md for the latest status.
+No further paid calls are needed for replay or default tests. Direct desktop (1280px) and mobile (390px) visual review completed after the temporary review quota cleared. Linux CI/container startup, replay and restart persistence passed for the primary implementation in run 44392384706. See PROGRESS.md for the latest status.
 
 The recording has a content hash and versioned source provenance, not a digital signature. Durable graph checkpoints are application-owned SQLite snapshots, not a claim of native LangGraph interrupt/checkpoint plugins. The primary local artifact release has no external-write side effects. Existing connected GitHub issues remain optional and fixture-tested.

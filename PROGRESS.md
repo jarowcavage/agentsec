@@ -75,3 +75,16 @@ Source milestone published as `41eca5969d39c37ad9fa519f7242c7d66c63d432`. Direct
 Clean Linux CI run 44392384706 has passed the container build, replay integrity/validation checks, health and restart persistence. Unit/API/MCP, lint and evaluation jobs passed; browser job is still finishing at this checkpoint.
 
 Additional acceptance hardening enforces the overall investigation deadline during in-flight operations, preserves paused state on cancellation, and tests tool timeouts and failed patch validation. All 17 focused investigation tests passed with no API charges. Remaining next step: publish this tested hardening and verify its final CI, then record final totals and limitations. No additional paid calls authorized beyond the existing $3 campaign ceiling are needed.
+
+
+## Final verified status — AgentSec 2.0, 2026-11-18
+
+The curated 2.0 interview workflow is implemented and verified. Final code: local `589152a`, public `ea12c49eecb49d302cbf21ce006cfd8956583a08`. Clean Linux CI [44392759807](https://github.com/jarowcavage/agentsec/actions/runs/44392759807) is green: **54 unit/API/MCP/policy tests + 28 evaluation cases + 6 desktop/mobile browser tests = 88 passing tests**. Two optional legacy live tests were excluded. Lint, formatting, JavaScript checks, dependency consistency, Docker build/startup, replay integrity, health and restart persistence passed. Local non-browser regression independently passed 82 tests. Desktop/mobile screenshots were visually inspected.
+
+Works: real model-selected tool investigation, actual curated dependency patch, before/after OSV evidence and sandbox tests, scoped denial/approval/local artifact release, persistent recovery and spending gates, unified workspace, presentation controls, authentic zero-new-cost replay and 5-/15-minute scripts. Original SBOM workflow and governance console remain available. Local server restarted with latest code at http://127.0.0.1:8000/.
+
+Failures disclosed: first two development captures failed (MCP structured response mismatch and repeated completed tool); fixes preceded the successful third capture. All attempts remain counted: **11 paid calls, $0.0016695 estimated, zero unsettled reservations**. No additional paid calls during final verification. These small-sample results are not a reliability benchmark or a billing receipt.
+
+Current blockers: none for the curated native/replay demo. Limits: only the curated urllib3 repository is supported; production reachability is unknown; local role selection is not enterprise SSO; the optional connected GitHub write path is fixture-tested, not live-accepted; native macOS validation is verified, while the alternative Docker sample-validation executor has not had a separate live acceptance run. Docker application/replay verification is green and does not establish nested validation support. No public application was deployed.
+
+Exact next steps: open the local URL, select Investigate Repository, then follow docs/DEMO_5_MINUTES.md or docs/DEMO_15_MINUTES.md. Replay needs no key or spending. For fresh runs use the explicitly initiated live mode and retain the campaign ledger. Future scope, if requested: separately accept the Linux sandbox executor, expand repository/lockfile support, and integrate production identity. Do not repeat completed milestones or recreate the recording unnecessarily.
