@@ -2,6 +2,12 @@
 
 AgentSec Workbench is a local application security triage prototype. The Workbench takes a CycloneDX JSON inventory, looks up exact package versions in [OSV](https://google.github.io/osv.dev/post-v1-querybatch/), and drafts a recommendation for a selected finding using [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs). The browser shows each citation and lets reviewers inspect its source excerpt.
 
+## Governed enterprise demonstration
+
+Start with `AGENTSEC_DEMO=1 uvicorn agentsec.main:app --host 127.0.0.1 --port 8000` and open [the console](http://127.0.0.1:8000/console). The default interview path uses explicitly labeled synthetic providers, real MCP authorization, human role checks, single-use approvals and an isolated resettable database. No external credentials are needed. Do not expose local persona switching publicly.
+
+See [the setup and troubleshooting runbook](docs/DEMO_RUNBOOK.md), [20-minute demo](docs/DEMO_SCRIPT.md), [business case](docs/BUSINESS_CASE.md), and [implementation status](docs/IMPLEMENTATION_PLAN.md). Connected GitHub is optional, separately authenticated and disabled until configured; it is tested with HTTP fixtures, not claimed live-verified. Legacy mock approvals now require an administrator demo session established in the console.
+
 ## Run locally
 
 Use Python 3.12 or later with network access to install dependencies and query OSV. Recommendation generation also requires an OpenAI API key with access to the configured model.
@@ -135,7 +141,7 @@ See [PROGRESS.md](PROGRESS.md) for completed milestones, test results, blockers,
 
 ## Demo and operations
 
-- [Architecture, trust boundaries, and threat model](docs/architecture.md)
+- [Architecture, trust boundaries, and threat model](docs/ARCHITECTURE.md)
 - [Docker Compose, hosted demo runbook, and CI](docs/deployment.md)
 - [Three-minute technical demo](docs/demo.md)
 - [Evaluation summary](docs/evaluation.md)

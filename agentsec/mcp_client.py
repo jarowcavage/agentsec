@@ -8,6 +8,7 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from pydantic import BaseModel, Field
 
+from .governance import PRIMARY_AGENT, Governance
 from .osv import Finding
 from .recommend import Evidence, Guidance, RecommendationError, advisory_evidence
 from .storage import Store
@@ -39,11 +40,15 @@ class MCPEvidence:
         )
 
     async def collect(self, scan_id: UUID, finding: Finding) -> RetrievedContext:
+        token = Governance(self.store).credential(PRIMARY_AGENT, f"scan:{scan_id}")
+        parameters = self.parameters.model_copy(
+            update={"env": {"PYTHONNOUSERSITE": "1", "AGENTSEC_AGENT_TOKEN": token}}
+        )
         arguments = {"scan_id": str(scan_id), "finding_id": finding.id}
         try:
             async with (
                 asyncio.timeout(12),
-                stdio_client(self.parameters) as (read, write),
+                stdio_client(parameters) as (read, write),
                 ClientSession(read, write) as session,
             ):
                 await session.initialize()

@@ -74,6 +74,9 @@ class Store:
         with self.connection() as db:
             db.execute("PRAGMA journal_mode=WAL")
             db.executescript(SCHEMA)
+        from .governance import Governance
+
+        Governance(self).initialize()
 
     @contextmanager
     def connection(self, *, read_only: bool = False):

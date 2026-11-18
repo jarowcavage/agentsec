@@ -117,6 +117,7 @@ class Upstreams:
 
 @pytest.fixture
 def upstreams(monkeypatch, tmp_path):
+    monkeypatch.setenv("AGENTSEC_DEMO", "1")
     providers = Upstreams()
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.setenv("AGENTSEC_DATABASE", str(tmp_path / "workbench.db"))
@@ -146,4 +147,5 @@ def upstreams(monkeypatch, tmp_path):
 @pytest.fixture
 def client(upstreams):
     with TestClient(app, base_url="http://localhost") as test_client:
+        test_client.post("/api/enterprise/session", json={"role": "administrator"})
         yield test_client

@@ -46,3 +46,35 @@ LangGraph manages the ordered stages in each request. SQLite stores completed sc
 ## Prototype and production boundaries
 
 The workflow has live OSV and OpenAI integration, persisted review state, and deterministic failure tests. The issue tracker is a local mock. A production rollout would need identity and access controls, model and egress quotas, managed secrets, backups with tested restore, retention controls, and broader grounding and reliability evaluation. Any real issue integration would need a separately scoped credential and idempotency across the network boundary.
+
+## Enterprise expansion: identities and capabilities
+
+```mermaid
+flowchart LR
+ Human[Local human persona] --> Console[Governance console]
+ Console --> DemoDB[Isolated demo SQLite]
+ Live[Live SBOM workbench] --> DB[Live SQLite]
+ Graph[LangGraph retrieval] --> Launcher[Trusted launcher issues scoped opaque token]
+ Launcher --> MCP[MCP stdio server]
+ MCP --> Policy[Authenticate token and check action, scan, expiry, status, permissions]
+ Policy --> Evidence[Read saved evidence]
+ Policy --> Audit[Persistent decision audit]
+ Console --> Request[Immutable action request]
+ Request --> Admin[Administrator approval]
+ Admin --> Grant[Expiring single-use capability]
+ Grant --> Transaction[Atomic simulated issue and consumption]
+ DB --> Connected[Separate connected request store]
+ Connected --> Password[Independent HTTP Basic administrator approval]
+ Password --> Claim[Claim grant before network operation]
+ Claim --> GitHub[Allowlisted GitHub issue endpoint]
+```
+
+`governance.py` owns persistent identities, exact action/resource grants, credential digests and timestamped policy events. The launcher issues an opaque 60-second credential bound to one scan and supplies it through the subprocess environment. Tools do not accept an agent identity parameter. Current permissions and status are queried at every invocation. Unknown tools, unknown/expired/revoked credentials, cross-scan access and missing permissions deny by default. Denial events commit before the exception is raised. Local filesystem and database access remain trusted; this is not a subprocess sandbox.
+
+`enterprise.py` holds server-issued opaque human sessions with one-hour expiration, an explicitly enabled local demo role switch and administrator-only governance/approval actions. The demo has its own database derived from the configured live database path. Both scan and recommendation replay substitute providers at integration boundaries; the graph, real MCP server and citation validators still execute. `Reset Demo` deletes only the demo database's records. It does not touch live scans or connected requests. Local simulation capabilities bind the exact stored title, body, agent, action and target; consumption and issue insertion share an immediate SQLite transaction.
+
+`github_integration.py` stores connected requests in the live database. Only a configured repository and fine-grained token enable proposals. Separate HTTP Basic administrator credentials approve and execute real writes. Claims occur before the HTTP request, preventing automatic duplicate execution after timeout. Ambiguous errors become uncertain and require manual inspection. This trades automatic recovery for avoiding duplicate writes. An in-flight write cannot be recalled by later revocation. The adapter does not search all existing external issues or survive loss of its deduplication database.
+
+Trust boundaries: advisory content is untrusted data; model output never grants access. A deterministic simulated model proposal demonstrates the policy denial separately from model refusal. Human sessions, local database and process launcher are trusted. Demo role switching intentionally permits a local operator to assume roles and must not be exposed publicly. Connected credentials are checked independently and never stored in browser local storage. CSP, same-origin mutation checks, safe text rendering and existing host restrictions remain in place. HTTP Basic is suitable here only on loopback (or a separately secured TLS deployment).
+
+Limitations: a single local operator, no SSO/tenant isolation, no signed audit ledger, no protection from an attacker with OS/database access, and no claim of complete injection prevention. Live API authentication, per-person accountability, versioned migrations, retention and key rotation require production engineering. Existing mock issues are a legacy workflow with administrator approval; new governed demo issues add expiring single-use capabilities and have a separate store.

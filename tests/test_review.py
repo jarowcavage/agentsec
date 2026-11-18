@@ -13,6 +13,7 @@ def issue_route(scan):
 
 def test_pending_review_survives_an_app_restart_and_creates_once(upstreams):
     with TestClient(app, base_url="http://localhost") as client:
+        client.post("/api/enterprise/session", json={"role": "administrator"})
         scan = upload(client).json()
         path = issue_route(scan)
         assert client.post(path).status_code == 404
@@ -29,6 +30,7 @@ def test_pending_review_survives_an_app_restart_and_creates_once(upstreams):
             assert [tuple(row) for row in tools] == [("lookup_vulnerability", "ok")]
 
     with TestClient(app, base_url="http://localhost") as client:
+        client.post("/api/enterprise/session", json={"role": "administrator"})
         assert client.get(f"/api/scans/{scan['id']}").json() == scan
         assert client.get(path).json() == draft
         route = f"{path}/{draft['id']}/decision"

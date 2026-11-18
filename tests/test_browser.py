@@ -45,6 +45,7 @@ def test_browser_upload_and_recommendation(site, upstreams, width):
         page = browser.new_page(viewport={"width": width, "height": 900})
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
+        page.request.post(site + "/api/enterprise/session", data={"role": "administrator"})
         page.goto(site)
 
         if width == 1280:
@@ -85,5 +86,41 @@ def test_browser_upload_and_recommendation(site, upstreams, width):
         expect(page.get_by_text("lookup vulnerability", exact=False)).to_be_visible()
         expect(page.get_by_text("human review", exact=False)).to_be_visible()
         assert len(upstreams.model_requests) == 1
+        assert not errors
+        browser.close()
+
+
+@pytest.mark.parametrize("width", [1280, 390])
+def test_governed_demo_console(site, width):
+    from playwright.sync_api import expect, sync_playwright
+
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch(executable_path=os.getenv("AGENTSEC_CHROMIUM"))
+        page = browser.new_page(viewport={"width": width, "height": 900})
+        errors = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        page.goto(site + "/console")
+        page.get_by_role("button", name="Switch persona").click()
+        page.get_by_role("button", name="Run Demo Scenario").click()
+        expect(page.get_by_text("SYNTHETIC PROVIDERS · NO AI CALL")).to_be_visible()
+        page.get_by_role("button", name="Request temporary issue permission").click()
+        page.get_by_role("button", name="approved", exact=True).click()
+        expect(page.get_by_role("status")).to_contain_text("Administrator role required")
+        page.locator("#persona").select_option("administrator")
+        page.get_by_role("button", name="Switch persona").click()
+        page.get_by_role("button", name="approved", exact=True).click()
+        expect(page.locator("#requests .badge")).to_have_text("approved")
+        page.get_by_role("button", name="Execute once").click()
+        expect(page.locator("#requests .badge")).to_have_text("consumed")
+        page.get_by_role("button", name="Execute once").click()
+        expect(page.get_by_role("status")).to_contain_text("consumed")
+        page.get_by_role("button", name="Security demonstration", exact=True).click()
+        page.get_by_role("button", name="Attempt unauthorized write").click()
+        expect(page.get_by_text("Policy decision: denied")).to_be_visible()
+        assert page.evaluate("document.documentElement.scrollWidth === innerWidth")
+        page.get_by_role("button", name="Overview", exact=True).click()
+        page.on("dialog", lambda dialog: dialog.accept())
+        page.get_by_role("button", name="Reset Demo").click()
+        expect(page.get_by_role("status")).to_contain_text("Operation completed")
         assert not errors
         browser.close()
