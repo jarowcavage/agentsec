@@ -54,3 +54,5 @@ Final native regression: **69 passed, 2 opt-in live tests excluded**, including 
 ### Exact resume steps
 
 Read this file, inspect `git status --short --branch`, and inspect the latest Actions run. Do not repeat completed implementation or spend model calls to recheck fixture behavior. Use `AGENTSEC_DEMO=1 uvicorn agentsec.main:app --host 127.0.0.1 --port 8000` for the console and `docs/DEMO_RUNBOOK.md` for the complete setup/test/reset workflow. Do not run connected writes without configured credentials and the application's explicit human approval.
+
+Expansion CI run 44267317926 found a Docker packaging failure: the existing deny-all build context excluded `evals/`. Added only the generated security report to `.dockerignore`'s allowlist. Container rerun pending; application unit/integration/evaluation checks passed before the packaging fix.

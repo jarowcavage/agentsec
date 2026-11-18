@@ -6,3 +6,5 @@
 !samples/workbench-demo.cdx.json
 **/__pycache__/
 **/*.py[cod]
+!evals/
+!evals/security-results.json
