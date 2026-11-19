@@ -23,6 +23,10 @@ def main():
     base = args.base_url.rstrip("/")
     status, health = read(f"{base}/health")
     assert status == 200 and health["status"] == "ok"
+    with urlopen(base + "/", timeout=8) as response:
+        assert "Which repository" in response.read().decode()
+    status, history = read(f"{base}/api/repositories")
+    assert status == 200 and isinstance(history, list)
     status, sample = read(f"{base}/sample")
     assert status == 200 and sample["bomFormat"] == "CycloneDX"
     status, recording = read(f"{base}/api/investigations/recording")

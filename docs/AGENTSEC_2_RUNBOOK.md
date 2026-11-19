@@ -6,7 +6,7 @@
 docker compose up --build
 ```
 
-Open http://127.0.0.1:8000/. The default recording requires no API key and makes no external writes. The image includes the real captured execution and sample repository. This command requires a working Docker engine; do not alter another user's Docker socket permissions.
+Open http://127.0.0.1:8000/example. The recording requires no API key and makes no external writes. The image includes the real captured execution and sample repository. This command requires a working Docker engine; do not alter another user's Docker socket permissions.
 
 Native alternative, Python 3.12 or later:
 
@@ -17,7 +17,7 @@ pip install -r requirements-dev.txt
 AGENTSEC_DEMO=1 uvicorn agentsec.main:app --host 127.0.0.1 --port 8000
 ```
 
-Click Investigate Repository, Show complete outcome, then inspect Evidence / Diff / Tests / Access. Restart presentation clears only browser presentation state; recordings and live history remain intact. See DEMO_5_MINUTES.md and DEMO_15_MINUTES.md.
+Click Play the Python example, Show complete outcome, then inspect Evidence / Diff / Tests / Access. Restart presentation clears only browser presentation state; recordings and live history remain intact. See DEMO_5_MINUTES.md and DEMO_15_MINUTES.md.
 
 ## Explicit fresh live run
 
@@ -46,3 +46,5 @@ No paid calls occur in default tests. Browser tests replay the genuine saved cap
 History lists live runs. Server restart marks in-flight work paused. Resume preserves observations, reservations and the original deadline; expired runs require a new investigation. A provider error never becomes a synthetic success. Missing model configuration leaves replay usable. Missing sandbox prevents validation and therefore successful completion. Missing/corrupted recording fails visibly. Session expiry requires re-establishing a local persona; no role is inferred from model output.
 
 State lives beside the configured AGENTSEC_DATABASE in `*.investigations.db` and an `investigations/` workspace directory. These are ignored runtime files. Recordings contain public evidence and sanitized paths, not credentials. Original CycloneDX uploads remain at `/legacy`; extended governance and separately configured GitHub issues remain at `/console`.
+
+For the new live GitHub repository and draft-PR workflow at `/`, see [REPOSITORY_WORKFLOW.md](REPOSITORY_WORKFLOW.md). This script describes the separately labeled recorded AI example.

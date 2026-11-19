@@ -33,3 +33,5 @@ Disclose all capture attempts: two failed during development (MCP response-contr
 Show tests/CI and explain trade-offs: FastAPI for typed APIs, SQLite for inspectable local persistence, one bounded LangGraph agent rather than multiple artificial agents, MCP for a meaningful execution boundary, browser-native modules rather than a large frontend framework.
 
 Ask the panel which failure mode or repository would make a convincing next evaluation. Limitations include single-operator trust, curated Python-only remediation, no generic repository execution, no signed audit ledger, no hosted deployment and no claim of production security certification. End with the actual patch and resettable zero-new-cost presentation.
+
+For the new live GitHub repository and draft-PR workflow at `/`, see [REPOSITORY_WORKFLOW.md](REPOSITORY_WORKFLOW.md). This script describes the separately labeled recorded AI example.

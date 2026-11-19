@@ -30,11 +30,16 @@ jobs:
           ruff check .
           ruff format --check .
           node --check agentsec/static/app.js
+          node --input-type=module --check < agentsec/static/repositories.js
           node --input-type=module --check < agentsec/static/workspace.js
           node --input-type=module --check < agentsec/static/workspace-components.js
           python -m pip check
       - name: Unit, API, MCP, and approval tests
         run: python -m pytest -q -m 'not browser and not live' --ignore=tests/test_evaluation.py
+      - name: Real Linux sample validation (no AI calls)
+        run: |
+          docker pull python:3.12-slim
+          python -m scripts.verify_linux_validation
       - name: Security and evaluation fixtures
         run: python scripts/evaluate.py --output "$RUNNER_TEMP/agentsec-evaluation.json"
       - name: Desktop and mobile browser tests

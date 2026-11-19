@@ -10,6 +10,7 @@ import uvicorn
 from agentsec.main import app
 
 from .conftest import ADVISORY, SAMPLE
+from .test_repository import repository_providers  # noqa: F401
 
 pytestmark = pytest.mark.browser
 
@@ -138,9 +139,9 @@ def test_authentic_replay_workspace(site, upstreams, width):
         page = browser.new_page(viewport={"width": width, "height": 1000})
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
-        page.goto(site)
+        page.goto(site + "/example")
         expect(page.get_by_role("heading", name="Find the risk. Prove the fix.")).to_be_visible()
-        page.get_by_role("button", name="Investigate Repository").click()
+        page.get_by_role("button", name="Play the Python example").click()
         expect(page.locator("#run-status")).to_contain_text("REPLAY")
         page.get_by_role("button", name="Next recorded step").click()
         expect(page.locator("#timeline")).to_contain_text("inspect repository")
@@ -162,4 +163,44 @@ def test_authentic_replay_workspace(site, upstreams, width):
         expect(page.locator("#summary")).to_be_hidden()
         assert not errors
         assert not upstreams.model_requests and not upstreams.osv_requests
+        browser.close()
+
+
+@pytest.mark.parametrize("width", [1280, 390])
+@pytest.mark.usefixtures("repository_providers")
+def test_real_repository_review_flow(site, upstreams, width):
+    from playwright.sync_api import expect, sync_playwright
+
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch(executable_path=os.getenv("AGENTSEC_CHROMIUM"))
+        page = browser.new_page(viewport={"width": width, "height": 1000})
+        errors = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        page.goto(site)
+        expect(page.get_by_role("heading", name="Which repository should we check?")).to_be_visible()
+        page.get_by_label("GitHub repository", exact=True).fill("https://github.com/test/repository")
+        page.get_by_role("button", name="Check repository", exact=False).click()
+        expect(page.locator("#state")).to_have_text("Checked")
+        expect(page.locator("#finding-count")).to_have_text("3")
+        expect(page.locator("#revision")).to_contain_text("aaaaaaaaaaaa")
+        page.get_by_role("button", name=re.compile("urllib3 1.26.18")).click()
+        page.get_by_role("button", name="Prepare suggested pull request").click()
+        expect(page.locator("#review-panel")).to_contain_text("Application tests: NOT RUN")
+        expect(page.get_by_role("button", name="Approve this proposal")).to_have_count(0)
+        page.get_by_label("Your access on this computer").select_option("administrator")
+        page.get_by_role("button", name="Reject this proposal").click()
+        expect(page.get_by_role("heading", name="You rejected this proposal")).to_be_visible()
+        page.get_by_label("I reviewed these exact changes", exact=False).check()
+        page.get_by_role("button", name="Approve this proposal").click()
+        expect(page.get_by_role("heading", name="You approved this exact proposal")).to_be_visible()
+        expect(page.locator("#review-panel")).to_contain_text("GitHub publishing is not connected")
+        download = page.get_by_role("link", name="Download the approved file change (.patch)")
+        patch = page.request.get(site + download.get_attribute("href"))
+        assert patch.status == 200 and "+urllib3==2.8.0" in patch.text()
+        assert page.evaluate("document.documentElement.scrollWidth === innerWidth")
+        page.reload()
+        expect(page.get_by_label("Your access on this computer")).to_have_value("administrator")
+        page.get_by_role("button", name="test/repository", exact=False).click()
+        expect(page.locator("#finding-count")).to_have_text("3")
+        assert not errors and not upstreams.model_requests
         browser.close()

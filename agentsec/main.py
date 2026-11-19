@@ -22,6 +22,8 @@ from .investigation.api import router as investigation_router
 from .mcp_client import MCPEvidence
 from .osv import OSVClient, OSVError
 from .recommend import Recommendation, RecommendationError, Recommender, load_guidance
+from .repository import initialize as initialize_repositories
+from .repository import router as repository_router
 from .sbom import MAX_UPLOAD, InvalidSBOM
 from .storage import IssueReview, ReviewConflict, Scan, Store
 from .telemetry import Trace
@@ -47,6 +49,7 @@ async def lifespan(app: FastAPI):
     initialize_enterprise(app.state)
     initialize_github(store)
     initialize_investigations(app.state)
+    initialize_repositories(app.state)
     app.state.mcp = MCPEvidence(store, load_guidance())
     app.state.pending = set()
     app.state.recommender = None
@@ -67,6 +70,7 @@ app.add_middleware(TrustedHostMiddleware, allowed_hosts=["localhost", "127.0.0.1
 app.include_router(enterprise_router)
 app.include_router(github_router)
 app.include_router(investigation_router)
+app.include_router(repository_router)
 app.mount("/static", StaticFiles(directory=ROOT / "agentsec/static"), name="static")
 
 
@@ -92,6 +96,11 @@ async def security_headers(request: Request, call_next):
 
 @app.get("/", include_in_schema=False)
 async def home():
+    return FileResponse(ROOT / "agentsec/static/repositories.html")
+
+
+@app.get("/example", include_in_schema=False)
+async def example():
     return FileResponse(ROOT / "agentsec/static/workspace.html")
 
 
