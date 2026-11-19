@@ -1,5 +1,24 @@
 # AgentSec Workbench progress
 
+## Latest checkpoint — real repositories, November 18, 2026
+
+This section supersedes historical status and next-step notes below. The home page is now the plain-English real repository workflow; the recorded model-selected AI workflow is at `/example`.
+
+- Running locally at http://127.0.0.1:8000/ using native Uvicorn, not local Docker. GitHub Actions verifies Docker on Linux. No hosted application was deployed.
+- GitHub connected for jarowcavage/agentsec and jarowcavage/juice-shop. Credentials remain only in ignored local `.env`; never display or commit them. User manually generated the token and requested no expiration; token expiry was not independently verified.
+- Real scans accepted for both repositories. Actual [Juice Shop draft PR #15](https://github.com/jarowcavage/juice-shop/pull/15) changes sanitize-html 1.4.2 to 2.18.2. Verified draft/open/unmerged. API acceptance proved unapproved writes, scan-only approval and repeated publication are denied. No claim of a separate human clicking approval. AgentSec scan/proposal accepted, no AgentSec PR created against its deliberately vulnerable fixture.
+- Native tests: 106 passed, two optional legacy live tests excluded. First full Linux CI 44439987248 passed 70 unit/API/MCP tests, 28 evaluation cases and eight browser cases. Docker build/startup/persistence and actual Linux sample validation passed (expected original regression failure; three patched checks passed). Final code [CI 44440499848](https://github.com/jarowcavage/agentsec/actions/runs/44440499848) also passed all 106 tests and both jobs.
+- Latest public implementation: `9a397cf82db30872d41224abca6eaceded2e05a7`. Full acceptance facts: `evals/repository-acceptance.json`. Primary demo: `docs/REPOSITORY_WORKFLOW.md`.
+- Repository scanning/proposals use zero AI calls; the separate AI example remains available. Campaign ledger at verification: 12 calls, $0.0019937 estimated, no outstanding reservations, below the $3 ceiling. No new model calls for this repository acceptance.
+
+Limits and blockers: dependency analysis only, not source-code/secrets scanning. Exact Python pins and npm lockfile v2/v3 scanning; automatic npm edits require exact package.json pins without a lockfile. Ranges/other formats are explicitly incomplete. Generic app compatibility tests are not run. Reviewer switching is local demo identity, not enterprise SSO. Direct desktop UI inspection preceded final small refinements; further visual inspection was blocked by automatic approval-review usage quota, while automated desktop/mobile tests passed. Linux validation is now accepted; a separate Docker containment probe is not claimed.
+
+Exact resume steps:
+1. Implementation and acceptance are complete. Check Git status and this checkpoint before continuing; do not repeat completed work.
+2. Open the local home page. Choose the completed Juice Shop scan in recent checks and show its existing draft PR; avoid duplicate PRs. For another repository, enter its public GitHub URL and inspect coverage before proposing a change.
+3. For publishing another reviewed change, use the separate approval password in local `.env`; never share it in chat. Do not merge PRs. Juice Shop fixes may affect its deliberately vulnerable training lessons.
+4. Keep hosting local and preserve history/cost ledger. Future work is broader resolved dependency formats, compatibility execution for arbitrary repositories, and production identity. Do not recreate the successful AI recording or rerun paid calls unnecessarily.
+
 ## Completed milestones
 
 | Milestone | Shipped | Verification |
@@ -97,6 +116,6 @@ Supported changes: exact Python requirements pins and exact npm package.json dep
 
 Native verification: **106 passed, 2 legacy live tests excluded**, including eight desktop/mobile browser cases. New tests cover real patch application, npm manifest edits, alias grouping, scope/expiry/tampering, rejection, changed GitHub revision, single-use publication and ambiguous outcomes. Direct desktop UI review occurred before the final small refinements; further direct browser review encountered the approval-review quota. The user manually finished token creation; token access to both authorized repositories was verified without exposing it.
 
-GitHub publishing is configured locally for `jarowcavage/agentsec` and `jarowcavage/juice-shop`, with a separate local approval password in ignored `.env`. Never commit or display credentials. User requested no token expiration. No merges are authorized. Real Juice Shop scan `97dc8e7c-cf9e-4f63-9ab8-1c8f258e792c` at `185add266e7cb0ba71c67c421e6c0970b9a5c381`: 10 exact package versions, 15 grouped problems, 220 skipped/partially covered entries. Its missing lockfile makes full installed dependency coverage unavailable. Live npm proposal acceptance is in progress.
+GitHub publishing is configured locally for `jarowcavage/agentsec` and `jarowcavage/juice-shop`, with a separate local approval password in ignored `.env`. Never commit or display credentials. User requested no token expiration. No merges are authorized. Real Juice Shop scan `97dc8e7c-cf9e-4f63-9ab8-1c8f258e792c` at `185add266e7cb0ba71c67c421e6c0970b9a5c381`: 10 exact package versions, 15 grouped problems, 220 skipped/partially covered entries. Its missing lockfile makes full installed dependency coverage unavailable. Live npm proposal acceptance is complete; see the latest checkpoint above.
 
-Exact next steps: finish the authorized draft PR acceptance through the app, commit/publish this milestone, inspect CI (including the newly added real Linux sample-validation job), verify AgentSec draft PR flow on the final published revision, and record links/results. Keep the demo local, do not merge PRs, and do not incur new model costs unnecessarily. Current local server session 79836 serves port 8000.
+This historical follow-up is complete; use the latest checkpoint at the top for current next steps.

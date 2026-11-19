@@ -1,0 +1,59 @@
+{
+  "date_local": "2026-11-18",
+  "scope": "Two real public repository scans and one authorized draft-PR acceptance; not a reliability benchmark.",
+  "scans": [
+    {
+      "repository": "jarowcavage/juice-shop",
+      "revision": "185add266e7cb0ba71c67c421e6c0970b9a5c381",
+      "status": "complete",
+      "package_versions_checked": 10,
+      "grouped_problems": 15,
+      "items_not_fully_checked": 220,
+      "seconds": 5.339,
+      "ai_calls": 0
+    },
+    {
+      "repository": "jarowcavage/agentsec",
+      "revision": "b94b79b11ce241de9ce600073878bbe4e9bb95e8",
+      "status": "complete",
+      "package_versions_checked": 13,
+      "grouped_problems": 8,
+      "items_not_fully_checked": 2,
+      "seconds": 3.785,
+      "ai_calls": 0
+    }
+  ],
+  "github_acceptance": {
+    "repository": "jarowcavage/juice-shop",
+    "status": "published",
+    "url": "https://github.com/jarowcavage/juice-shop/pull/15",
+    "title": "Update sanitize-html from 1.4.2 to 2.18.2",
+    "draft_verified": true,
+    "merged": false,
+    "unapproved_publish_denied": true,
+    "scan_only_approval_denied": true,
+    "repeat_publish_denied": true,
+    "application_tests": "not run",
+    "method": "Authorized acceptance through the real local HTTP API, including the local reviewer role; not a claim that a separate person clicked each control."
+  },
+  "native_tests": {
+    "passed": 106,
+    "legacy_live_excluded": 2
+  },
+  "limits": [
+    "Dependency checks, not source-code or secrets analysis.",
+    "Ranges and unsupported formats are disclosed as incomplete coverage.",
+    "Automatic npm changes currently require exact manifest pins and no existing lockfile.",
+    "The recorded AI example remains separate from deterministic repository scanning."
+  ],
+  "ci": {
+    "url": "https://github.com/jarowcavage/agentsec/actions/runs/44440499848",
+    "commit": "9a397cf82db30872d41224abca6eaceded2e05a7",
+    "test_job": "success",
+    "container_job": "success",
+    "unit_api_mcp": 70,
+    "evaluation": 28,
+    "browser": 8,
+    "linux_sample_validation": "original regression failed as expected; patched three checks passed"
+  }
+}

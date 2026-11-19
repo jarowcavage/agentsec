@@ -18,7 +18,7 @@ In the ignored server `.env`, set:
 
 - `AGENTSEC_DEMO=1` for local reviewer access.
 - `AGENTSEC_GITHUB_REPOSITORIES=owner/repository,owner/second-repository` for an explicit list of repositories you control.
-- `AGENTSEC_GITHUB_TOKEN` to a fine-grained token scoped to that repository with Contents and Pull requests read/write. Do not grant Administration, Workflows or account access.
+- `AGENTSEC_GITHUB_TOKEN` to a fine-grained token scoped to the allowed repositories with Contents and Pull requests read/write. Do not grant Administration, Workflows or account access.
 - `AGENTSEC_APPROVER_PASSWORD` to a separate password of at least 16 characters.
 
 Load the environment and restart the local app. Do not commit or share these secrets. For token lifecycle use GitHub's token settings; expiration or revocation will prevent future writes.
@@ -36,3 +36,9 @@ The GitHub implementation uses the official [tree API](https://docs.github.com/e
 5. Switch to local reviewer, reject once to demonstrate the boundary, then review/approve. Download the patch or, if connected and intended, create a real draft PR. Show the decision history. Never merge during a demo.
 
 For an offline interview, use **Watch the recorded example** (`/example`). That is the captured model-selected LangGraph/MCP investigation with real sample sandbox tests and zero new AI charges. It is explicitly a different mode, not a live GitHub scan. The original detailed 5-/15-minute scripts describe this recorded AI path.
+
+## Live acceptance — November 18, 2026
+
+The app scanned both jarowcavage/agentsec and jarowcavage/juice-shop and opened [Juice Shop draft PR #15](https://github.com/jarowcavage/juice-shop/pull/15), updating sanitize-html 1.4.2 to 2.18.2. Approval denial, scan-only role denial and repeat-publication denial were exercised through the real HTTP API. This was an authorized acceptance test, not a separate human review or application compatibility test. Nothing was merged. AgentSec scan/proposal generation was accepted; no PR was opened against its intentionally vulnerable fixture.
+
+For a repeat demo, open the completed Juice Shop scan from history and show its existing PR link. Avoid creating duplicate PRs. Juice Shop is deliberately vulnerable training software: review the training impact before deciding whether to merge any fix. Full scan counts and limits are recorded in evals/repository-acceptance.json.
