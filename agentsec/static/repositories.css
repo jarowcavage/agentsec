@@ -5,3 +5,5 @@
 .rail select{font-size:12px;padding:10px 6px}.review-panel h3{overflow-wrap:anywhere}.review-panel{scroll-margin-top:20px}
 
 .examples{display:flex;align-items:center;gap:20px;flex-wrap:wrap}.examples .helper{font-size:11px}.metrics .metric:nth-child(2) strong{color:#945b24}
+
+.delivery{border:1px solid #b5d4c1;background:#eef8f0;border-radius:9px;padding:24px;margin:20px 0}.delivery a{font-weight:700}.delivery h2{font-size:24px}

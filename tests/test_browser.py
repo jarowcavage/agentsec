@@ -198,9 +198,20 @@ def test_real_repository_review_flow(site, upstreams, width):
         patch = page.request.get(site + download.get_attribute("href"))
         assert patch.status == 200 and "+urllib3==2.8.0" in patch.text()
         assert page.evaluate("document.documentElement.scrollWidth === innerWidth")
+        # Display fixture only: actual publication and its denial paths have separate API/live checks.
+        from agentsec import repository as repositories
+
+        identifier = page.request.get(site + "/api/repositories").json()[0]["id"]
+        saved = repositories.read(app.state.store, identifier)
+        saved["proposals"][0].update(
+            status="published", pull_request_url="https://github.com/test/repository/pull/1"
+        )
+        repositories.save(app.state.store, saved)
         page.reload()
         expect(page.get_by_label("Your access on this computer")).to_have_value("administrator")
         page.get_by_role("button", name="test/repository", exact=False).click()
         expect(page.locator("#finding-count")).to_have_text("3")
+        expect(page.get_by_role("heading", name="A real draft pull request is ready.")).to_be_visible()
+        expect(page.locator("#scan-progress")).to_contain_text("has not merged")
         assert not errors and not upstreams.model_requests
         browser.close()
